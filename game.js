@@ -2,6 +2,7 @@ const question = document.getElementById("question");
 const choices = Array.from(document.getElementsByClassName("choice-text"));
 const questionCounterText = document.getElementById('questionCounterText');
 const scoreText = document.getElementById('score');
+const timerEl = document.getElementById("timer");
 
 
 let currentQuestion = {}
@@ -9,6 +10,8 @@ let acceptingAnswers = true;
 let score = 0;
 let questionCounter = 0;
 let availableQuestions = []
+var time = 21;
+let intervalId;
 
 let questions = [
     {
@@ -43,6 +46,7 @@ let questions = [
         choice4: "<script file='xxx.js'>",
         answer: 3
     }
+    
 ]
 
   //CONSTANTS
@@ -60,11 +64,18 @@ startGame = () => {
 
 // This function moves the user to the next question once answered
 getNewQuestion = () => {
-    if(availableQuestions.length === 0 || questionCounter > MAX_QUESTIONS) {
-        localStorage.setItem("mostREcentScore", score);
+   
+    //intervalId = setInterval(updateTime(), 1000);
+    if(availableQuestions.length === 0 || questionCounter > MAX_QUESTIONS || (time === 0)) {
+
+        localStorage.setItem("mostRecentScore", score);
+
         //go to the end page
         return window.location.assign('end.html');
     }
+    
+    
+    
     questionCounter++;
     questionCounterText.innerText = (questionCounter + "/" + MAX_QUESTIONS);
 
@@ -93,9 +104,9 @@ choices.forEach(choice => {
         const classToApply = selectedAnswer == currentQuestion.answer ? "correct" : "incorrect";
         
         //increments score counter
-        //if(classToApply === "correct") {
-        //    incrementScore(CORRECT_BONUS);
-        //}
+        if(classToApply === "correct") {
+        incrementScore();
+        }
 
         //applies a red or green to indicate a wrong or right answer then moves user to next question
         selectedChoice.parentElement.classList.add(classToApply);
@@ -107,9 +118,8 @@ choices.forEach(choice => {
     })
 })
 
-//incrementScore = () => {
-//    score++;
-//    scoreText.innerText = score;
-//};
+incrementScore = () => {
+score++;
+};
 
 startGame();
